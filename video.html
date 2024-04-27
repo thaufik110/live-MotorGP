@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Live Motor GP</title>
+    <link rel="icon" type="image/x-icon" href="https://siapgrak111.blogspot.com/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-divider@0.2.0/dist/css/bulma-divider.min.css">
+  </head>
+
+  <body>
+    <section class="hero ">
+      <div class="hero-body">
+        <div class="container">
+          <video controls="" crossorigin="" playsinline="">
+            <source id="vid" src="https://serv5.cam/aHR0cDovLzE0OC4yNTEuNi4yMDc6ODA4Ny9obHMvc3RyZWFtLm0zdTg=.m3u8"
+              type="application/x-mpegURL">
+            </source>
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css " rel="stylesheet">
+
+    <script>
+
+      function playerr() {
+        const video = document.querySelector("video");
+        const source = video.getElementsByTagName("source")[0].src;
+
+
+        const defaultOptions = {};
+
+        if (Hls.isSupported()) {
+
+          const hls = new Hls();
+          hls.loadSource(source);
+
+          // From the m3u8 playlist, hls parses the manifest and returns
+          // all available video qualities. This is important, in this approach,
+          // we will have one source on the Plyr player.
+          hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+
+            // Transform available levels into an array of integers (height values).
+            const availableQualities = hls.levels.map((l) => l.height)
+
+            // Add new qualities to option
+            defaultOptions.quality = {
+              default: availableQualities[0],
+              options: availableQualities,
+              // this ensures Plyr to use Hls to update quality level
+              forced: true,
+              onChange: (e) => updateQuality(e),
+            }
+
+            // Initialize here
+            const player = new Plyr(video, defaultOptions);
+            player.on('ready', () => {
+              const { elements: { wrapper } } = player
+              const div = document.createElement('div')
+            })
+          });
+          hls.attachMedia(video);
+          window.hls = hls;
+        } else {
+
+          const player = new Plyr(video, defaultOptions);
+        }
+
+
+
+        function updateQuality(newQuality) {
+          window.hls.levels.forEach((level, levelIndex) => {
+            if (level.height === newQuality) {
+              console.log("Found quality match with " + newQuality);
+              window.hls.currentLevel = levelIndex;
+            }
+          });
+        }
+      }
+
+
+    </script>
+    <script>
+      function tele() {
+
+        fetch(`https://api.telegra.ph/getPage/ok-live-03-28?return_content=true`, { method: 'GET' })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            // Work with JSON data here MOHON BANTUAN SUKARELA PENCET IKLAN UNTUK BELI SERVER BARU PERSIAPAN MANDALIKA!!!
+
+            document.getElementById("vid").src = "https://stv.bio/aHR0cDovLzE0OC4yNTEuNi4yMDc6ODA4NS9obHMvc3RyZWFtLm0zdTg=.m3u8";
+
+
+            playerr();
+
+          })
+          .catch((err) => {
+            // Do something for an error here
+          })
+
+      }
+      function gp() {
+
+        fetch(`https://location.api.useinsider.com/?v=2&pId=10001129&`, { method: 'GET' })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            // Work with JSON data here
+            if (data.countryCode != "ES") {
+              if (data.countryCode == "ID" || data.countryCode == "MY" || data.countryCode == "SG") {
+                tele()
+                document.getElementById("info").innerHTML = "DANA DARI IKLAN SAYA GUNAKAN UNTUK MAINTENANCE SERVER, SAAT INI HANYA 1% PENGUNJUNG YANG KLIK IKLAN!!! jangan lupa matikan ADBLOCK dan VPN";
+              }
+            }
+          })
+          .catch((err) => {
+            // Do something for an error here
+          })
+      }
+      window.addEventListener('DOMContentLoaded', (event) => {
+        playerr();
+      });
+
+    </script>
+  </body>
+
+</html>
